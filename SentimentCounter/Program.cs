@@ -81,11 +81,8 @@ namespace SentimentCounter
 
 
                 //Display results
-                Console.WriteLine(String.Format("\n\nSurvey Response Totals for {0} through {1}", dtFrom.ToString("M/d/yyyy"), dtTo.ToString("M/d/yyyy")));
-                Console.WriteLine(String.Format("\tGood: \t{0}", Counts.goodCount));
-                Console.WriteLine(String.Format("\tOk:  \t{0}", Counts.okCount));
-                Console.WriteLine(String.Format("\tBad: \t{0}", Counts.badCount));
-                Console.WriteLine("\n\n");
+                DisplayCounts(dtFrom, dtTo, Counts);
+
             }
 
 
@@ -110,7 +107,7 @@ namespace SentimentCounter
 
             long goodCounter = 0, badCounter = 0, okCounter = 0, otherCounter = 0;   //TODO:  forgot to initialize 
 
-
+            //TOOD:  if performance is poor under high number of responses, look at Parallel.ForEach, and use Interlocked.Increment
             //Loop through responses, attempt to add response's employeeID to hashset as a filter for uniqueness
             // If it is added, then increment sentiment count
             foreach (Response response in FilteredResponses)
@@ -140,6 +137,16 @@ namespace SentimentCounter
 
             return new SentimentCounts { goodCount = goodCounter, okCount = okCounter, badCount = badCounter, otherCount = otherCounter };
 
+        }
+
+        static void DisplayCounts(DateTimeOffset dtFrom, DateTimeOffset dtTo, SentimentCounts counts)
+        {
+            Console.WriteLine(String.Format("\n\nSurvey Response Totals for {0} through {1}", dtFrom.ToString("M/d/yyyy"), dtTo.ToString("M/d/yyyy")));
+            Console.WriteLine(String.Format("\tGood: \t{0}", counts.goodCount));
+            Console.WriteLine(String.Format("\tOk:  \t{0}", counts.okCount));
+            Console.WriteLine(String.Format("\tBad: \t{0}", counts.badCount));
+            Console.WriteLine(String.Format("\tOther: \t{0}", counts.otherCount));
+            Console.WriteLine("\n\n");
         }
     }
 
